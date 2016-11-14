@@ -31,7 +31,13 @@
       </nav>
     </header>
 
+    <div id="footer">
+     <a class="#introduction"><a href="index.html">Back To Top </a></a>
+    </div>
+
     <div id="site_content">
+      <br> </br>
+      <p id="name">Written By: Kevin Kowalewski and Reilly Hallstrom</p>
     	  <div id="introduction" class="content">
             <div class="content_item">
     		  <h1>Introduction</h1>
@@ -66,7 +72,7 @@
                 <p> Federation is short for federated identity management(FIdm) which consists of having a set of policies and protocols in order to manage the identity of API users and devices. Many companies want to share resources with other companies or partners but a problem arises when each business is a separate security realm with independent security measures. One answer to this problem is FIdM. For example, single sign on (SSO), which is a subset of FIdM, allows a user's auth token to be used across multiple systems or organizations. The picture below illustrates a simple federated identity management system. </p>
                 <br> </br>
                 <img src="federation.png" class="image2"> </img>
-                <br> </br>
+                <p id="source"> Source: <a href="https://msdn.microsoft.com/en-us/library/dn589790.aspx"> https://msdn.microsoft.com/</a> </p>
                 <br> </br>
                 <p> By using federated identity management you are able to separate the authentication code from the application code and instead delegate the authentication of your API to a trusted identity provider (IdP). The end user will then talk to the identity provider to get a security token service (STS) token. This STS token might contain more information that just authentication information such as address, contacts, roles, and other data. After the user acquires the STS token they are now able to use the service or API since the API has trusted the IdP to authenticate the users. They are many examples of federated identity management systems such as Microsoft's Active Directory Federation Service and social identity providers like Google and Facebook. </p>
 
@@ -108,11 +114,11 @@
     <div id="historichacks" class="content">
         <div class="content_item">
       <h1>Pokemon Go Case Study</h1>
-      <p>Last July, Pokemon Go was released by a mobile development company called Niantic and immediately caught on like wildfire. The interactive mobile game had amassed over 100 million downloads in just over a month(SOURCE). With this huge user base came overloaded servers, location issues, app malfunctions, and naturally attackers targeting Pokemon Go's API.</p>
+      <p>Last July, Pokemon Go was released by a mobile development company called Niantic and immediately caught on like wildfire. The interactive mobile game had amassed over 100 million downloads in just over a month. With this huge user base came overloaded servers, location issues, app malfunctions, and naturally attackers targeting Pokemon Go's API.</p>
 
       <p> One of the unique characteristics of the game is that the user is able to play in an augmented reality environment on a mobile device. Pokemon that are close to a user's location are shown on the game's map allowing the user to attempt to capture them. However only the Pokemon within roughly 500 meters of the user are shown on the map. To attackers this meant that if it was possible to send fake coordinates to Pokemon Go's API then you could reveal the location of Pokemon everywhere. This hack was exactly what was pulled off by a reddit user.  </p>
 
-      <p> In order to pull off this hack you first needed to install some MITM attack or network snooping software such as Charles with SSL Proxy which allows the user to decrypt their own HTTPS messages using a SSL Proxy. Besides the network tools the user also needs to have some way of decoding binary(.bin) files which is the format in which the Pokemon Go API sends back its data. To decode these .bin files you can use the protoc command and the .proto file provided by this specific reddit user to decode the files. For more information on .proto files and how they are used click here(https://developers.google.com/protocol-buffers/docs/proto3). Once this is setup the user can then connect to Pokemon Go and read the unencrypted responses with Charles and decode the binaries sent back. Once these binaries are decoded you can view in plaintext the locations of nearby Pokemon and just fake new coordinates to build an entire map of Pokemon locations. </p>
+      <p> In order to pull off this hack you first needed to install some MITM attack or network snooping software such as Charles with SSL Proxy which allows the user to decrypt their own HTTPS messages using a SSL Proxy. Besides the network tools the user also needs to have some way of decoding binary(.bin) files which is the format in which the Pokemon Go API sends back its data. To decode these .bin files you can use the protoc command and the .proto file provided by this specific reddit user to decode the files. For more information on .proto files and how they are used click <a href="https://developers.google.com/protocol-buffers/docs/proto3"> here</a>. Once this is setup the user can then connect to Pokemon Go and read the unencrypted responses with Charles and decode the binaries sent back. Once these binaries are decoded you can view in plaintext the locations of nearby Pokemon and just fake new coordinates to build an entire map of Pokemon locations. </p>
 
         <p> Other attackers have taken this hack to another level and built software to automatically "farm" Pokemon without the user even moving. In response to this Niantic released a new version of Pokemon Go that created hidden data called Unknown 6 (U6) that somehow used hashed encryption to hide the user's gps coordinates in order to send them to the server. However this U6 algorithm changed with every tick of Pokemon Go's internal "heartbeat" timer. In theory, this only allowed a valid game client to create valid U6 hashes and allowed for Niantic to easily be able to detect bots and hackers trying to spoof game info. Unfortunately for Niantic, this U6 generation algorithm was cracked within 3 days of the new release. After breaking the new algorithm the attackers built their own 3rd party API which allows for Pokemon Go bots and hacks to play the game.   </p>
 
@@ -128,6 +134,7 @@
     <h1>Summary</h1>
         <p>In conclusion, building an API that is completely secure is very difficult in today's world. Big name companies such as Snapchat, Twitter, Tinder, and Niantic have all suffered from API security hacks in recent years. Not only do these attacks release secure user information but they are also extremely expensive to cleanup and repair. The graphic below shows that many of the types of attacks have yet to be discovered with new attacks being created all the time.  However as the designer of the API you can prevent many of these attacks by staying up to date with the latest software patches, authorization protocols, encryption algorithms, and anti attack technologies.</p>
     <img src="graph.jpg" class="image"> </img>
+      <p id="source"> Source: <a href="http://blog.smartbear.com/readyapi/the-most-common-api-security-hacks-of-2014-infographic/"> http://blog.smartbear.com/</a> </p>
 
 
 
@@ -167,5 +174,7 @@
 
 
   </div><!--close main-->
+
 </body>
+
 </html>
