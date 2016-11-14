@@ -36,10 +36,11 @@
             <div class="content_item">
     		  <h1>Introduction</h1>
               <h3>What is an API?</h3>
-              <p>An API (Application Programming Interface) is a collection of protocols, functions, and tools used for developing applications.  These interfaces are utilized in numerous modern applications including e-commerce, social networks, cloud computing, and mobile development. They are many different types of APIs which all interact with clients in notably different ways.  Because of these differences, each type of API possesses different security needs.  For our purposes we will be solely focusing on request based APIs which interact with clients remotely.  This distant relationship with clients introduces an enormous amount of security vulnerabilities into this type of API. </p>
+              <p>An API (Application Programming Interface) is a collection of protocols, functions, and tools used for developing applications. These interfaces are utilized in numerous modern applications including e-commerce, social networks, cloud computing, and mobile development. They are many different types of APIs which all interact with clients in notably different ways. Because of these differences, each type of API possesses different security needs. For our purposes we will be solely focusing on request based APIs which interact with clients remotely. This distant relationship with clients introduces an enormous amount of security vulnerabilities into this type of API.
+              </p>
               <br/><br/>
               <h3>What is the API Stronghold? </h3>
-              <p> The API stronghold outlines four paradigms which encapsulate the entire topic of API security.  These four defenses (Authorization, Authentication, Federation, Delegation)  are each explained in greater detail below.  Distinguishing these four fundamental qualities of API security provides valuable insight into common practices shared between APIs with vastly different security needs.</p>
+              <p> The API stronghold outlines four paradigms which encapsulate the entire topic of API security. These four defenses (Authorization, Authentication, Federation, Delegation) are each explained in greater detail below. Distinguishing these four fundamental qualities of API security provides valuable insight into common practices shared between APIs with vastly different security needs. </p>
         </div><!--close content-->
 
 
@@ -61,11 +62,23 @@
 
                  <br/> <br/>
               <h2>Federation</h2>
-                <h3>What is Federation</h3>
-                <p> Federation is short for federated identity management(FIdm) which consists of having a set of policies and protocols in order to manage the identity of API users and devices. Single sign on (SSO) is a subset of FIdM in which a user's auth token is trusted across multiple systems or organizations.
-    Federated security serves a different purpose for different levels of users. The base users the federated security system allows for the use of a small set of credentials for use on many systems, services, and APIs. For admins, federated security
-    Examples of auth systems are Google Identity Federation, OAuth, OpenId, and security tokens.
-    </p>
+                <h3>What is Federation?</h3>
+                <p> Federation is short for federated identity management(FIdm) which consists of having a set of policies and protocols in order to manage the identity of API users and devices. Many companies want to share resources with other companies or partners but a problem arises when each business is a separate security realm with independent security measures. One answer to this problem is FIdM. For example, single sign on (SSO), which is a subset of FIdM, allows a user's auth token to be used across multiple systems or organizations. The picture below illustrates a simple federated identity management system. </p>
+                <br> </br>
+                <img src="federation.png" class="image2"> </img>
+                <br> </br>
+                <br> </br>
+                <p> By using federated identity management you are able to separate the authentication code from the application code and instead delegate the authentication of your API to a trusted identity provider (IdP). The end user will then talk to the identity provider to get a security token service (STS) token. This STS token might contain more information that just authentication information such as address, contacts, roles, and other data. After the user acquires the STS token they are now able to use the service or API since the API has trusted the IdP to authenticate the users. They are many examples of federated identity management systems such as Microsoft's Active Directory Federation Service and social identity providers like Google and Facebook. </p>
+
+                <h3>Why is Federation important?</h3>
+                <p> Federation is important since users tend to have numerous passwords and keeping track of all of them is difficult. By using a FIdM system you can help out your user and still stay secure by allowing them to use one login for multiple APIs. Without a FIdM system the administrators of the API must keep track of the credentials for all the users and is responsible for performing tasks such as password reminders and resets which add to the attacks surface of the API.</p>
+
+                <br/> <br/>
+              <h2>Delegation</h2>
+                <h3>What is Delegation?</h3>
+                <p> Delegation is the process by which access and rights of an API are given to authorized users. There are two different levels of delegation. First is delegation at the authentication/identity level and second is delegation at the authorization/access level. This is where the difference between authorization and authentication becomes significant. </p>
+                <p>Delegation at the authentication/identity level is when an authentication mechanism provides an identity to a user that is different from the validated identity of that user. However first the previous owner of new identity must first approve of this user switching identities.  A great example of this is the sudo command in UNIX systems. In order to use the sudo command a user must start their session assuming their regular identity and then after running sudo they type in a password to ensure the admin approves this identity switch and finally the regular user is now an admin.  </p>
+                <p>Delegation at the authorization/access control level is the process of determining who can and who cannot read, update, and delete certain files or data. The most common mechanism for access delegation is an access control list (ACL). For example a end user might be allowed to read data but isn't allowed to write or delete data. This type of restriction would be handles with an ACL and is an example of delegation.  </p>
 
 
     </div><!--close content-->
@@ -73,22 +86,20 @@
     <div id="currenttech" class="content">
         <div class="content_item">
       <h1>Current Standards</h1>
-        <p> This section explains some of the current standards for securing a REST API. </p>
+        <p>For this section picture yourself as the lead developer at a software development company and your job is to begin building the new API for your company's application. Your first inclination might first be how will the API be structured but in fact if security is kept in mind throughout the development process it generally leads to a more secure API. The following sections will explain some ways to go about securing your API from the beginning to the end. Since there are numerous different types of APIs and ways to secure them the sections below are not an exhaustive list of security measures but rather just some common techniques. Also for the sections below we chose to use a REST API as they are becoming more popular among developers.  </p>
 
-        <h3> Authentication and Session Management </h3>
-          <p>REST APIs should use session based-authentication by establishing a session token via a POST request or placing the API key in the POST body or in a cookie. All usernames, passwords, session tokens, and API keys should not be placed into the url. The reason for this is that many web server's log the urls and if the url contains valuable session information and an attacker gets access to an error message then they will have access to valuable data.
-EXAMPLES HERE??
-Talk about OAuth 2.0 authorization framework
-          </p>
 
-          <h3> Authorization </h3>
-          <p>Protecting HTTP methods is a common way of enforcing authorization restrictions. A common scheme is using GET to read, POST to create, PUT to replace and update, and DELETE to delete. Of course the api should make sure the incoming session token or API key is valid for the HTTP method requested.
-EXAMPLE HERE???
- </p>
-
+        <h3> Authentication and Authorization </h3>
+          <p>Choosing the right authentication protocol for your API isn't a trivial decision. The options range from using basic API authentication with transport layer security (TLS) to using the OAuth1 authentication protocol or possible even creating a custom protocol (not recommended). First off I will explain how you can secure your API with basic TLS and some of its pros and cons. Basic Authentication is the easiest of the major authentication protocols to implement mainly because it doesn't require any external libraries as the libraries required are standard in my languages and frameworks. Basic authentication works by sending the user's credentials over the network in a base64 encoding and by using SSL these are hidden from network snoopers. A large downside of using basic authentication is that the password is sent over with every request made which increase the attack surface.  </p>
+          <p>Another common authentication protocol is called OAuth1 which is one of the most secure protocols. OAuth1 uses a cryptographic signature based protocol using the HMAC-SHA1 message authentication code algorithm. The huge benefit of using OAuth is that it doesn't require the secret token to ever cross the network and therefore limiting the attack space of the API. Since the token is never passed across the network you could use OAuth1 without using SSL but it is highly recommended if the data the API transfers is sensitive. However there is a downside to using OAuth1. That is that you have to follow a strict sets of rules and use specific hashing algorithms to get the correct key. While most popular programming languages have a library to help with this it can still be confusing.  </p>
+          <p> There are many other authorization protocols that I didn't explain here but some of them are OAuth2, OpenID, and Kerberos. As mentioned earlier it is also possible to develop your own custom authorization protocol but this is not recommended unless you have a deep understanding of cryptographical techniques. Not only will your custom protocol be difficult to implement but then only you will know how to use it and other developers who might want to use your API will have difficulty connecting securely. </p>
+          <br> </br>
           <h3> Input Validation </h3>
-          <p> First make sure the API is susceptible to sql injection attacks and that the inputs are sanitized. Next consider rate limiting the requests to a certain number of requests per hour or day to prevent fuzzing. There are also others ways to prevent attacks by strongly typing incoming data. This means for an input only accept numbers, characters, or some other acceptable value that makes sense in the context. This increases the difficulty of attacks against your API. Commonly REST APIs allow for multiple response types and the client will specify the order of response types in the Accept header of the request. Validate incoming content types by comparing the Content-Type header of the POST or PUT request with the format of the actual data. If the API encounters mismatching content or a missing content header it should respond with a 406 Not Acceptable response.
-          </p>
+          <p> Mismanagement of user input is one of the leading causes of API hacks. Some of the most common ones are SQL injection attacks and cross site scripting. In order to prevent these attacks you must make sure that all user inputs are sanitized. Next consider rate limiting the requests to a certain number of requests per hour or day to prevent fuzzing. There are also others ways to prevent attacks by strongly typing incoming data. This means for an input only accept numbers, characters, or some other acceptable value that makes sense in the context. This increases the difficulty of attacks against your API. Commonly REST APIs allow for multiple response types and the client will specify the order of response types in the Accept header of the request. Validate incoming content types by comparing the Content-Type header of the POST or PUT request with the format of the actual data. If the API encounters mismatching content or a missing content header it should respond with a 406 Not Acceptable response. </p>
+          <br> </br>
+          <h3> Other Security Measures </h3>
+          <p> There are many other security measures that should be taken when building an API. The most common type of attack carried out in recent years has been the distributed denial of service (DDoS) attack. These attacks are orchestrated by huge networks of infected devices to flood a targeted server with HTTP requests over and over until the server can no longer provide services to normal users. The attacks can be tricky to defend against but there are ways of slowing them down for example limiting the request a user can make. There are also plenty of other attacks not mentioned here that deserve attention when building an API but this could get you started thinking about security first rather than later in the design process.</p>
+
 
 
 
@@ -97,21 +108,17 @@ EXAMPLE HERE???
     <div id="historichacks" class="content">
         <div class="content_item">
       <h1>Pokemon Go Case Study</h1>
-          <p>This section explains an recent attack on Pokemon Go's API</p>
-      <p>Last July, Pokemon Go was released by a mobile development company called Niantic and immediately caught on like wildfire. The interactive mobile game had amassed over 100 million downloads in just over a month (SOURCE). With this huge user base came overloaded servers, location issues, app malfunctions, and naturally attackers targeting Pokemon Go's API.
-      </p>
+      <p>Last July, Pokemon Go was released by a mobile development company called Niantic and immediately caught on like wildfire. The interactive mobile game had amassed over 100 million downloads in just over a month(SOURCE). With this huge user base came overloaded servers, location issues, app malfunctions, and naturally attackers targeting Pokemon Go's API.</p>
 
-      <p> One of the unique characteristics of the game is that you are able to play in an augmented reality environment on a mobile device. Pokemon that are close to a user's location are shown on the game's map allowing the user to attempt to capture them. However only the Pokemon within roughly 500 meters of the user are shown on the map. To attackers this meant that if it was possible to send fake coordinates to Pokemon Go's API then you could reveal the location of Pokemon everywhere. This hack was exactly what was pulled off by a reddit user.
-      </p>
+      <p> One of the unique characteristics of the game is that the user is able to play in an augmented reality environment on a mobile device. Pokemon that are close to a user's location are shown on the game's map allowing the user to attempt to capture them. However only the Pokemon within roughly 500 meters of the user are shown on the map. To attackers this meant that if it was possible to send fake coordinates to Pokemon Go's API then you could reveal the location of Pokemon everywhere. This hack was exactly what was pulled off by a reddit user.  </p>
 
-      <p> In order to pull off this hack you first needed to install some MITM attack or network snooping software such as Charles with SSL Proxy which allows the user to decrypt HTTPS messages using a SSL Proxy. Also the user needs to have some way of decoding binary(.bin) files which is what the Pokemon Go API responds with. To decode these .bin files you can use the protoc command and the .proto file provided by this specific reddit user. For more information on .proto files and how they are used click here(https://developers.google.com/protocol-buffers/docs/proto3). Once this is setup the user can then connect to Pokemon Go and read the unencrypted responses with Charles and decode the binaries sent back. Once these binaries are decoded you can view in plaintext the locations of nearby Pokemon and just fake new coordinates to build an entire map of Pokemon locations.
-      </p>
+      <p> In order to pull off this hack you first needed to install some MITM attack or network snooping software such as Charles with SSL Proxy which allows the user to decrypt their own HTTPS messages using a SSL Proxy. Besides the network tools the user also needs to have some way of decoding binary(.bin) files which is the format in which the Pokemon Go API sends back its data. To decode these .bin files you can use the protoc command and the .proto file provided by this specific reddit user to decode the files. For more information on .proto files and how they are used click here(https://developers.google.com/protocol-buffers/docs/proto3). Once this is setup the user can then connect to Pokemon Go and read the unencrypted responses with Charles and decode the binaries sent back. Once these binaries are decoded you can view in plaintext the locations of nearby Pokemon and just fake new coordinates to build an entire map of Pokemon locations. </p>
 
-        <p> Other attackers have taken this hack to another level and built software to automatically "farm" Pokemon without the user ever moving far. In response to this Niantic released a new version of Pokemon Go that created hidden data called Unknown 6 (U6) the somehow used hashed encryption to hide the users gps coordinates in order to send to the server. However this U6 algorithm changed with every tick of Pokemon Go's internal "heartbeat" timer. In theory, this only allowed a valid game client to create valid U6 hashes and allow for Niantic to easily be able to detect bots and hackers trying to spoof game info. Unfortunately for Niantic, this U6 generation algorithm was cracked within 3 days of the new release. Then the attackers have took this attack and built their own 3rd party API which again allows for Pokemon Go bots and hacks to play the game.
-        </p>
+        <p> Other attackers have taken this hack to another level and built software to automatically "farm" Pokemon without the user even moving. In response to this Niantic released a new version of Pokemon Go that created hidden data called Unknown 6 (U6) that somehow used hashed encryption to hide the user's gps coordinates in order to send them to the server. However this U6 algorithm changed with every tick of Pokemon Go's internal "heartbeat" timer. In theory, this only allowed a valid game client to create valid U6 hashes and allowed for Niantic to easily be able to detect bots and hackers trying to spoof game info. Unfortunately for Niantic, this U6 generation algorithm was cracked within 3 days of the new release. After breaking the new algorithm the attackers built their own 3rd party API which allows for Pokemon Go bots and hacks to play the game.   </p>
 
-      <p> When looking at this attack we see that sometimes attacks don't even have to lead to a security breach of some server or API to be effective. In this example attackers where able to use spoofing and API farming to gain valuable data that the developers didn't want released. So even though Pokemon Go's servers could of been airtight, attackers still found a way to break something. This is a prime example of the point made earlier that API security isn't simply a one size fits all approach. It takes multiple systems and protocols to attempt to cover an APIs entire attack surface.
-      </p>
+      <p> When looking at this attack we see that sometimes attacks don't even have to lead to a security breach of a server or API to be effective. In this example attackers were able to use spoofing and API farming to gain valuable data that the developers didn't want released. So even though Pokemon Go's servers could of been completely secure to sql injection attacks attackers still found a way to break something. This is a prime example of the point made earlier that API security isn't simply a one size fits all approach, it takes multiple systems and protocols to attempt to cover an APIs entire attack surface.</p>
+
+
 
     </div><!--close content-->
 	</div><!--close site_content-->
@@ -119,9 +126,7 @@ EXAMPLE HERE???
   <div id="summary" class="content">
       <div class="content_item">
     <h1>Summary</h1>
-        <p>In conclusion, building an API that is completely secure is very difficult in today's world. Big name companies such as Snapchat, Twitter, Tinder, and Niantic have all suffered from some sort of API security hacks. The graphic below does a good job of showing that many of the types of attacks have yet to be discovered with new attacks being created all the time. IMAGE HERE.
-However as the designer of the API you can prevent nearly all these attacks by staying up to date with the latest software patches, authorization protocols, encryption algorithms, and anti attack technologies. </p>
-
+        <p>In conclusion, building an API that is completely secure is very difficult in today's world. Big name companies such as Snapchat, Twitter, Tinder, and Niantic have all suffered from API security hacks in recent years. Not only do these attacks release secure user information but they are also extremely expensive to cleanup and repair. The graphic below shows that many of the types of attacks have yet to be discovered with new attacks being created all the time.  However as the designer of the API you can prevent many of these attacks by staying up to date with the latest software patches, authorization protocols, encryption algorithms, and anti attack technologies.</p>
     <img src="graph.jpg" class="image"> </img>
 
 
